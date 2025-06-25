@@ -31,7 +31,7 @@ const Button = ({
 			onClick={onClick}
 			className={`
 				z-10
-				flex items-center justify-between 
+				flex items-center justify-between
 				h-[32px]
 				transition-[width] duration-700 ease-in-out
 				${defaultStyles}

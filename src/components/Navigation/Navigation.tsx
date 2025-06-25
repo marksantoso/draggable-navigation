@@ -143,7 +143,7 @@ const Navigation = () => {
 					>
 						{navigationItems}
 					</SortableContext>
-					<div className="bg-white ml-[20px]"> 
+					<div className="bg-gray-100 ml-[20px]"> 
 						<Button text="Add Page" icon={Plus} iconColor="text-gray-900" className="bg-white" onClick={handleAddPage} />
 					</div>
 				</div>

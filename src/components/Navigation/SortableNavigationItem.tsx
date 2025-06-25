@@ -35,7 +35,7 @@ const SortableNavigationItem = forwardRef(({ item, onNavigate }: { item: INaviga
             >
                 <div className="relative">
                     {item.isSettingsActive && <Settings settings={item.settings} />}
-                    <div className="flex flex-row items-center bg-white w-full" {...listeners} >
+                    <div className="flex flex-row items-center bg-gray-100 w-full" {...listeners} >
                         <Button
                             text={item.name}
                             icon={item.icon}
