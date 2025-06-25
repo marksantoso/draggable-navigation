@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <h1>Fillout</h1>
+      <main className="flex flex-col gap-[32px] items-center justify-center flex-1 h-full">
+        <h1>FILLOUT</h1>
       </main>
   );
 }

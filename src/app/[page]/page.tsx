@@ -3,9 +3,7 @@ export default async function Page( props: { params: Promise<{ page: string }> }
 
   return (
     <main className="flex flex-col gap-[32px] items-center justify-center flex-1 h-full">
-      <h1>{page}</h1>
+      <h1>{page.toUpperCase()}</h1>
     </main>
   );
 }
-
- 

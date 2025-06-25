@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState, useLayoutEffect, useCallback, useMe
 import { useRouter, usePathname } from 'next/navigation';
 import { useNavigationStore } from '@/store/NavigationStore';
 import Divider from '@/components/@ui/Divider/Divider';
+import Button from '@/components/@ui/Button/Button';
+import { Plus } from 'lucide-react';
 
 import {
 	DndContext,
@@ -30,7 +32,7 @@ const Navigation = () => {
 	const firstBtnRef = useRef<HTMLDivElement | null>(null);
 	const lastBtnRef = useRef<HTMLDivElement | null>(null);
 	const [dividerStyle, setDividerStyle] = useState({});
-	const { navigation, navigateTo, toggleSettings, setCurrentPage, reorderItems } = useNavigationStore();
+	const { navigation, navigateTo, toggleSettings, setCurrentPage, addPage, reorderItems } = useNavigationStore();
 
 	// Move useSensors to the top level
 	const sensors = useSensors(
@@ -79,7 +81,7 @@ const Navigation = () => {
 			if (!firstBtnRef.current || !lastBtnRef.current) return;
 			const firstRect = firstBtnRef.current.getBoundingClientRect();
 			const lastRect = lastBtnRef.current.getBoundingClientRect();
-			setDividerStyle({ width: `${lastRect.left - firstRect.right}px`, left: `${firstRect.width}px` })
+			setDividerStyle({ width: `${(lastRect.right - firstRect.right) + 20}px`, left: `${firstRect.width}px` })
 		});
 	}, []);
 
@@ -99,6 +101,10 @@ const Navigation = () => {
 	useEffect(() => {
 		updateGap();
 	}, [navigation])
+
+	const handleAddPage = useCallback(() => {
+		addPage(navigation.length + 1);
+	}, [addPage]);
 
 	// Memoize the navigation items mapping function
 	const navigationItems = useMemo(() => 
@@ -137,6 +143,9 @@ const Navigation = () => {
 					>
 						{navigationItems}
 					</SortableContext>
+					<div className="bg-white ml-[20px]"> 
+						<Button text="Add Page" icon={Plus} iconColor="text-gray-900" className="bg-white" onClick={handleAddPage} />
+					</div>
 				</div>
 			</div>
 		</DndContext>
