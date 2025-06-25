@@ -25,13 +25,13 @@ const SortableNavigationItem = forwardRef(({ item, onNavigate, index, isLastItem
     };
 
     return (
-        <div ref={ref as React.RefObject<HTMLDivElement>}
-        > <div
-            ref={setNodeRef}
-            style={style}
-            className="relative touch-none flex items-center justify-center"
-            {...attributes}
-        >
+        <div ref={ref as React.RefObject<HTMLDivElement>}>
+            <div
+                ref={setNodeRef}
+                style={style}
+                className="relative touch-none flex items-center justify-center"
+                {...attributes}
+            >
                 <div className="relative">
                     {item.isSettingsActive && <Settings settings={item.settings} />}
                     <div className="flex flex-row items-center w-full" {...listeners} >

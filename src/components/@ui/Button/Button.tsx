@@ -40,7 +40,7 @@ const Button = ({
 				<div className="flex items-center justify-center w-[20px] h-[20px]">
 					{Icon && <Icon className={`${iconColor}`} />}
 				</div>
-				<span className="text-sm font-medium text-gray-900">{text}</span>
+				<span className="text-sm font-medium text-gray-900 whitespace-nowrap">{text}</span>
 				<div className={`flex items-center justify-center w-[16px] h-[16px] ${isActive ? "block" : "hidden"}`}>
 					<MoreVertical className="text-gray-500" />
 				</div>
