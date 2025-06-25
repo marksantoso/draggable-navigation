@@ -1,3 +1,4 @@
+'use client'
 import React, { forwardRef } from 'react';
 import Button from '@/components/@ui/Button/Button';
 import Settings from './Settings/Menu';
@@ -7,7 +8,7 @@ import {
     useSortable,
 } from '@dnd-kit/sortable';
 
-const SortableNavigationItem = forwardRef(({ item, onNavigate, index, isLastItem }: { item: INavigationItem, onNavigate: (pageId: string) => void, index: number, isLastItem: boolean }, ref) => {
+const SortableNavigationItem = forwardRef(({ item, onNavigate }: { item: INavigationItem, onNavigate: (pageId: string) => void, index: number, isLastItem: boolean }, ref) => {
     const {
         attributes,
         listeners,

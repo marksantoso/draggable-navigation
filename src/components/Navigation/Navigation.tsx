@@ -27,8 +27,8 @@ import { UniqueIdentifier } from '@dnd-kit/core';
 const Navigation = () => {
 	const pathname = usePathname();
 	const router = useRouter();
-	const firstBtnRef = useRef(null);
-	const lastBtnRef = useRef(null);
+	const firstBtnRef = useRef<HTMLDivElement | null>(null);
+	const lastBtnRef = useRef<HTMLDivElement | null>(null);
 	const [dividerStyle, setDividerStyle] = useState({});
 	const { navigation, navigateTo, toggleSettings, setCurrentPage, reorderItems } = useNavigationStore();
 
@@ -76,19 +76,15 @@ const Navigation = () => {
 		const currentPage = pathname?.replace('/', '');
 		setCurrentPage(currentPage);
 		toggleSettings(currentPage, true)
-	}, [pathname]);
+	}, [pathname, setCurrentPage, toggleSettings]);
 
 
 	function updateGap() {
 		// Force a new render cycle to ensure refs are properly updated
 		requestAnimationFrame(() => {
 			if (!firstBtnRef.current || !lastBtnRef.current) return;
-
 			const firstRect = firstBtnRef.current.getBoundingClientRect();
 			const lastRect = lastBtnRef.current.getBoundingClientRect();
-
-			console.log('firstRect', firstRect)
-			console.log('lastRect', lastRect)
 			// Difference between the last button's left edge and the first button's right edge
 			setDividerStyle({ width: `${lastRect.left - firstRect.right}px`, left: `${firstRect.width}px` })
 		});

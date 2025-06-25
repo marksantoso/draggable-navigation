@@ -42,7 +42,7 @@ const useNavigationStore = create<NavigationState>((set) => {
 
     addPage: (order: number) => set((state) => {
       // Find the next available ID
-      let baseId = 'new-page';
+      const baseId = 'new-page';
       let counter = 1;
       let newId = baseId;
       

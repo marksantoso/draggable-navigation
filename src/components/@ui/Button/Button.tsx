@@ -1,5 +1,5 @@
 import React from 'react';
-import { Info, FileText, MoreVertical, CheckCircle } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 
 const Button = ({
 	ref,
