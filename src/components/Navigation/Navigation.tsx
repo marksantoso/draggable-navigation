@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect, useCallback, useMemo } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useNavigationStore } from '@/store/NavigationStore';
 import Divider from '@/components/@ui/Divider/Divider';
@@ -32,6 +32,7 @@ const Navigation = () => {
 	const [dividerStyle, setDividerStyle] = useState({});
 	const { navigation, navigateTo, toggleSettings, setCurrentPage, reorderItems } = useNavigationStore();
 
+	// Move useSensors to the top level
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
 			activationConstraint: {
@@ -43,52 +44,50 @@ const Navigation = () => {
 		})
 	);
 
-	const handleNavigation = (pageId: string) => {
+	// Memoize callback functions
+	const handleNavigation = useCallback((pageId: string) => {
 		navigateTo(pageId);
 		router.push(`/${pageId}`);
-	};
+	}, [navigateTo, router]);
 
-	const handleDragStart = (event: DragStartEvent) => {
+	const handleDragStart = useCallback((event: DragStartEvent) => {
 		toggleSettings(event.active.id as string, false)
-	};
+	}, [toggleSettings]);
 
-	const reorderNavigationItems = (active: { id: UniqueIdentifier }, over: { id: UniqueIdentifier } | null) => {
+	const reorderNavigationItems = useCallback((active: { id: UniqueIdentifier }, over: { id: UniqueIdentifier } | null) => {
 		if (over && active.id !== over.id) {
 			const oldIndex = navigation.findIndex((item) => item.id === active.id);
 			const newIndex = navigation.findIndex((item) => item.id === over.id);
 			const newOrder = arrayMove(navigation, oldIndex, newIndex);
 			reorderItems(newOrder);
 		}
-	};
+	}, [navigation, reorderItems]);
 
-	const handleDragEnd = (event: DragEndEvent) => {
+	const handleDragEnd = useCallback((event: DragEndEvent) => {
 		const { active, over } = event;
 		reorderNavigationItems(active, over);
-	};
+	}, [reorderNavigationItems]);
 
-	const handleDragOver = (event: DragOverEvent) => {
+	const handleDragOver = useCallback((event: DragOverEvent) => {
 		const { active, over } = event;
 		reorderNavigationItems(active, over);
 		updateGap();
-	};
+	}, [reorderNavigationItems]);
+
+	const updateGap = useCallback(() => {
+		requestAnimationFrame(() => {
+			if (!firstBtnRef.current || !lastBtnRef.current) return;
+			const firstRect = firstBtnRef.current.getBoundingClientRect();
+			const lastRect = lastBtnRef.current.getBoundingClientRect();
+			setDividerStyle({ width: `${lastRect.left - firstRect.right}px`, left: `${firstRect.width}px` })
+		});
+	}, []);
 
 	useEffect(() => {
 		const currentPage = pathname?.replace('/', '');
 		setCurrentPage(currentPage);
 		toggleSettings(currentPage, true)
 	}, [pathname, setCurrentPage, toggleSettings]);
-
-
-	function updateGap() {
-		// Force a new render cycle to ensure refs are properly updated
-		requestAnimationFrame(() => {
-			if (!firstBtnRef.current || !lastBtnRef.current) return;
-			const firstRect = firstBtnRef.current.getBoundingClientRect();
-			const lastRect = lastBtnRef.current.getBoundingClientRect();
-			// Difference between the last button's left edge and the first button's right edge
-			setDividerStyle({ width: `${lastRect.left - firstRect.right}px`, left: `${firstRect.width}px` })
-		});
-	}
 
 	// Run *after* the DOM paints, so we get accurate dimensions
 	useLayoutEffect(() => {
@@ -101,6 +100,26 @@ const Navigation = () => {
 		updateGap();
 	}, [navigation])
 
+	// Memoize the navigation items mapping function
+	const navigationItems = useMemo(() => 
+		navigation.map((item, index) => {
+			const isFirstItem = index === 0;
+			const isLastItem = index === navigation.length - 1;
+
+			return (
+				<div key={item.id} className="flex flex-row items-center">
+					<SortableNavigationItem
+						ref={isFirstItem ? firstBtnRef : isLastItem ? lastBtnRef : null}
+						item={item}
+						index={index}
+						isLastItem={isLastItem}
+						onNavigate={handleNavigation}
+					/>
+					{!isLastItem && <Divider order={index + 1} />}
+				</div>
+			);
+		}), [navigation, handleNavigation]);
+
 	return (
 		<DndContext
 			sensors={sensors}
@@ -112,28 +131,11 @@ const Navigation = () => {
 			<div className="flex items-center p-4 bg-gray-100 rounded-lg shadow-md">
 				<div className="flex items-center justify-start relative flex-1">
 					<div className={`h-0.5 border-t border-dashed border-gray-400 absolute`} style={dividerStyle}></div>
-
 					<SortableContext
 						items={navigation}
 						strategy={horizontalListSortingStrategy}
 					>
-						{navigation.map((item, index) => {
-							const isFirstItem = index === 0
-							const isLastItem = index === navigation.length - 1
-
-							return (
-								<div key={item.id} className="flex flex-row items-center">
-									<SortableNavigationItem
-										ref={isFirstItem ? firstBtnRef : isLastItem ? lastBtnRef : null}
-										item={item}
-										index={index}
-										isLastItem={isLastItem}
-										onNavigate={handleNavigation}
-									/>
-									{!isLastItem && <Divider order={index + 1} />}
-								</div>
-							)
-						})}
+						{navigationItems}
 					</SortableContext>
 				</div>
 			</div>
@@ -141,4 +143,5 @@ const Navigation = () => {
 	);
 };
 
-export default Navigation;
+// Memoize the entire component
+export default React.memo(Navigation);

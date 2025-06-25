@@ -30,20 +30,24 @@ const Button = ({
 			className={`
         flex items-center justify-between 
         h-[32px]
+        transition-[width] duration-700 ease-in-out
         ${defaultStyles}
         ${!disabled && hoverStyles}
         ${isActive && activeStyles}
         ${disabled && disabledStyles}
       `}
 		>
-			<div className="flex items-center space-x-1.5">
+			<div className="flex items-center space-x-1.5 transition-all duration-200 ease-in-out">
 				<div className="flex items-center justify-center w-[20px] h-[20px]">
 					{Icon && <Icon className={`${iconColor}`} />}
 				</div>
 				<span className="text-sm font-medium text-gray-900 whitespace-nowrap">{text}</span>
-				<div className={`flex items-center justify-center w-[16px] h-[16px] ${isActive ? "block" : "hidden"}`}>
-					<MoreVertical className="text-gray-500" />
-				</div>
+
+				{isActive && (
+					<div className={`flex items-center justify-center w-[16px] h-[16px] transition-all duration-200 ease-in-out`}>
+						<MoreVertical className="text-gray-500" />
+					</div>
+				)}
 			</div>
 		</div>
 	);

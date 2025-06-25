@@ -10,6 +10,7 @@ A dynamic form page builder built with Next.js that allows users to create, mana
 - Add new pages between existing pages
 - Context menu for page operations (rename, duplicate, delete)
 - Active page highlighting and selection
+- Smooth transitions and hover animations
 - In-memory state management using Zustand
 
 ## Tech Stack
