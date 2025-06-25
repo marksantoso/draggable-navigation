@@ -1,7 +1,7 @@
 'use client'
 import React, { forwardRef } from 'react';
 import Button from '@/components/@ui/Button/Button';
-import Settings from './Settings/Menu';
+import Settings from './Settings/SettingsMenu';
 import { CSS } from '@dnd-kit/utilities';
 import { INavigationItem } from '@/config/navigation';
 import {
@@ -16,7 +16,7 @@ const SortableNavigationItem = forwardRef(({ item, onNavigate }: { item: INaviga
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: item.id });
+    } = useSortable({ id: item.id, attributes: { roleDescription: undefined } });
 
     const style = {
         transform: CSS.Transform.toString(transform),

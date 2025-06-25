@@ -6,7 +6,8 @@ export const settingsMenuItems: IMenuItem[] = [
 		id: 'set-first-page',
 		label: 'Set as first page',
 		icon: Flag,
-		color: 'text-blue-600'
+		color: 'text-blue-600',
+		fill: '#2F72E2'
 	},
 	{
 		id: 'rename',

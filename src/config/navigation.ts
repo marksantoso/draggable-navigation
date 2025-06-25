@@ -6,6 +6,7 @@ export interface IMenuItem {
   label: string;
   icon: typeof Info | null;
   color?: string;
+  fill?: string;
   divider?: boolean;
   onClick?: () => void;
 }
